@@ -12,31 +12,27 @@ export class Fetcher {
     return this.browser !== undefined;
   }
 
-  static async initialize() {
+  static async initialize(options: PuppeteerLaunchOptions = {}) {
     if (this.isInitialized()) return;
-    const options: PuppeteerLaunchOptions = {
+    this.browser = await puppeteer.launch({
       targetFilter: (target) => !!target.url(),
       headless: "new",
-    };
-    this.browser = await puppeteer.launch(options);
+      ...options,
+    });
   }
 
-  static async get(url: string) {
-    await this.initialize();
-    return this.request(url, "GET");
+  static get(url: string) {
+    return this.request(url, "GET", undefined);
   }
 
-  static async request(url: string, method: "GET" | "POST", data: any = undefined) {
-    invariant(this.browser !== undefined, "INITIALIZED");
+  static async request(url: string, method: "GET" | "POST", data: any = undefined): Promise<[HTTPResponse | null, Page]> {
+    invariant(this.browser !== undefined, "Fetcher Not Initialized");
     const page = await this.browser.newPage();
-    if (method !== "GET") {
-      await page.setRequestInterception(true);
-      page.on("request", (request) => {
-        request.continue({ method, postData: data });
-      });
+    let response = await page.goto(url);
+    const text = await response?.text();
+    if (text?.includes("<title>Just a moment...</title>")) {
+      response = await page.waitForResponse((response) => response.ok() && response.url() === url);
     }
-    await page.goto(url);
-    const response = await page.waitForResponse((response) => response.url() === url && response.status() === 200);
-    return response;
+    return [response, page];
   }
 }
