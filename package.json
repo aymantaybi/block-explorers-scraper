@@ -1,6 +1,6 @@
 {
   "name": "block-explorers-scraper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Block Explorers Scraper",
   "main": "index.js",
   "scripts": {
