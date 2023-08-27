@@ -1,7 +1,7 @@
 import { PuppeteerLaunchOptions } from "puppeteer";
 
 export interface HeldToken {
-  address: string | undefined;
+  address: string;
   symbol: string;
   quantity: number;
   price: {

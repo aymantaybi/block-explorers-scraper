@@ -48,6 +48,7 @@ export class PolygonScraper extends BaseScraper {
       $("body > table > tbody > tr").each((index) => {
         const selector = `body > table > tbody > tr:nth-child(${index + 1}) >`;
         const address = $(`${selector} td:nth-child(2) > div:nth-child(1) > div:nth-child(2) > a:nth-child(2)`).attr("title");
+        if (address === undefined) return;
         const symbol = $(`${selector} td:nth-child(3)`).text();
         const rawQuantity = $(`${selector} td:nth-child(4)`).text();
         const rawPrices = $(`${selector} td:nth-child(5)`).text();
