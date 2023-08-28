@@ -1,1 +1,1 @@
-export * as Scraper from "./scraper";
+export * from "./scraper";

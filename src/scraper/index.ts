@@ -1,1 +1,5 @@
-export { PolygonScraper as Polygon } from "./polygon";
+import { PolygonScraper } from "./polygon";
+
+export namespace Scraper {
+  export const Polygon = PolygonScraper;
+}
